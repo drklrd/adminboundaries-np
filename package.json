@@ -11,6 +11,7 @@
     "react-draggable": "^3.0.4",
     "react-scripts": "1.0.14",
     "react-select": "^1.2.1",
+    "topojson-server": "^3.0.0",
     "underscore": "^1.8.3"
   },
   "scripts": {

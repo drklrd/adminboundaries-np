@@ -19,3 +19,34 @@ body{
     border-radius: 5px;
     cursor: move;
 }
+
+.download-geojson{
+    /*position: relative;*/
+    /*left : 25%;*/
+    border : none;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 7px;
+    cursor: pointer !important;
+}
+
+.button-color-blue{
+    background: #2B82CB;
+}
+
+.button-color-green{
+    background: #c0392b;
+}
+
+.edit-mode{
+    position: absolute;
+    top : 20px;
+    left : 38%;
+    z-index : 1000;
+    background: #c0392b;
+    opacity: 0.7;
+    color: #ffffff;
+    padding : 9px;
+    border-radius: 5px;
+    cursor: move;
+}

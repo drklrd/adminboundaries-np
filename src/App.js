@@ -8,6 +8,7 @@ import NepalAdmin from './data/admin-nepal.json';
 
 import './App.css';
 
+const topojson = require('topojson-server');
 const { features } = NepalAdmin;
 const bckFeatures = NepalAdmin.features;
 
@@ -32,10 +33,11 @@ class App extends Component {
                 layer.bindPopup(feature.properties);
             },
         }).addTo(this.map);
+        this.map.fitBounds(geoJSONLayer.getBounds());
     }
 
     componentDidMount() {
-        const map = this.map = window.L.map(ReactDOM.findDOMNode(this.refs['map']),{editable: true}).setView([28.2380, 83.9956], 8);
+        const map = this.map = window.L.map(ReactDOM.findDOMNode(this.refs['map']),{editable: true}).setView([28.2380, 83.9956], 3);
         window.L.tileLayer.grayscale('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
@@ -66,6 +68,9 @@ class App extends Component {
                 }));
                 break;
             default:
+                this.addGeojson(bckFeatures.filter((feature) => {
+                    return feature.properties.NAME === selected.value;
+                }));
 
         }
 
@@ -80,15 +85,29 @@ class App extends Component {
     }
 
     handleMunicipalityChange = (selected) => {
-        if(selected){
-            this.addGeojson(bckFeatures.filter((feature) => {
-                return feature.properties.NAME === selected.value;
-            }));
-        }
+        this.applyAppropriateGeoJSON(selected,'municipality');
         this.setState({
             selectedMunicipality: selected,
         });
+    }
 
+    downloadGeoJSON = () => {
+        this.initiateDownload(geoJSONLayer.toGeoJSON(),'geojson');
+    }
+
+    downloadTopoJSON = () => {
+        const geoJSON = geoJSONLayer.toGeoJSON();
+        const topojsonvalue = topojson.topology({features:geoJSON});
+        this.initiateDownload(topojsonvalue,'topojson');
+
+    }
+
+    initiateDownload(obj,format){
+        const dataStr = URL.createObjectURL( new Blob([(JSON.stringify(obj))],{type:'text/plain'}));
+        const dlAnchorElem = document.createElement('a');
+        dlAnchorElem.setAttribute("href", dataStr);
+        dlAnchorElem.setAttribute("download",`downloadeddata.${format}`);
+        dlAnchorElem.click();
     }
 
     render() {
@@ -141,6 +160,15 @@ class App extends Component {
                                     };
                                 })}
                             />
+                        </div>
+                    </div>
+                    <br/>
+                    <div className="row">
+                        <div className="col-3">
+                            <button className="download-geojson button-color-blue" onClick={this.downloadGeoJSON}> Download GeoJSON </button>
+                        </div>
+                        <div className="col-3">
+                            <button className="download-geojson button-color-blue" onClick={this.downloadTopoJSON}> Download TopoJSON </button>
                         </div>
                     </div>
                 </div>
