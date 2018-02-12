@@ -1,3 +1,4 @@
+import Draggable from 'react-draggable';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'underscore';
@@ -132,67 +133,70 @@ class App extends Component {
         const valueMunicipality = selectedMunicipality && selectedMunicipality.value;
         return (
             <div>
-                <div className="select-file">
-                    <div className="row">
-                        <h4> Download admin boundaries for Nepal</h4>
+                <Draggable>
+                    <div className="select-file">
+                        <div className="row">
+                            <h4> Download admin boundaries for Nepal</h4>
+                        </div>
+                        <div className="row">
+                            <div className="col-4">
+                                <Select
+                                    className="select"
+                                    placeholder = 'Select Province'
+                                    value={valueProvince}
+                                    onChange={this.handleProvinceChange}
+                                    options={provinces.map((province)=>{
+                                        return {
+                                            value : province,
+                                            label : province,
+                                        };
+                                    })}
+                                />
+                            </div>
+                            <div className="col-4">
+                                <Select
+                                    className="select"
+                                    placeholder = 'Select District'
+                                    value={valueDistrict}
+                                    onChange={this.handleDistrictChange}
+                                    options={districts.map((district)=>{
+                                        return {
+                                            value : district,
+                                            label : district,
+                                        };
+                                    })}
+                                />
+                            </div>
+                            <div className="col-4">
+                                <Select
+                                    className="select"
+                                    placeholder = 'Select Municipality'
+                                    value={valueMunicipality}
+                                    onChange={this.handleMunicipalityChange}
+                                    options={municipalities.map((municipality)=>{
+                                        return {
+                                            value : municipality,
+                                            label : municipality,
+                                        };
+                                    })}
+                                />
+                            </div>
+                        </div>
+                        <br/>
+                        <div className="row">
+                            <div className="col-3"></div>
+                            <div className="col-2">
+                                <button className="download-geojson button-color-blue" onClick={this.downloadGeoJSON}> <i className="fa fa-download" aria-hidden="true"></i>   GeoJSON </button>
+                            </div>
+                            <div className="col-2">
+                                <button className="download-geojson button-color-blue" onClick={this.downloadTopoJSON}> <i className="fa fa-download" aria-hidden="true"></i> TopoJSON </button>
+                            </div>
+                            <div className="col-2">
+                                <button className="download-geojson button-color-blue" onClick={this.downloadPoly}> <i className="fa fa-download" aria-hidden="true"></i> Poly file </button>
+                            </div>
+                        </div>
                     </div>
-                    <div className="row">
-                        <div className="col-4">
-                            <Select
-                                className="select"
-                                placeholder = 'Select Province'
-                                value={valueProvince}
-                                onChange={this.handleProvinceChange}
-                                options={provinces.map((province)=>{
-                                    return {
-                                        value : province,
-                                        label : province,
-                                    };
-                                })}
-                            />
-                        </div>
-                        <div className="col-4">
-                            <Select
-                                className="select"
-                                placeholder = 'Select District'
-                                value={valueDistrict}
-                                onChange={this.handleDistrictChange}
-                                options={districts.map((district)=>{
-                                    return {
-                                        value : district,
-                                        label : district,
-                                    };
-                                })}
-                            />
-                        </div>
-                        <div className="col-4">
-                            <Select
-                                className="select"
-                                placeholder = 'Select Municipality'
-                                value={valueMunicipality}
-                                onChange={this.handleMunicipalityChange}
-                                options={municipalities.map((municipality)=>{
-                                    return {
-                                        value : municipality,
-                                        label : municipality,
-                                    };
-                                })}
-                            />
-                        </div>
-                    </div>
-                    <br/>
-                    <div className="row">
-                        <div className="col-2">
-                            <button className="download-geojson button-color-blue" onClick={this.downloadGeoJSON}> <i className="fa fa-download" aria-hidden="true"></i>   GeoJSON </button>
-                        </div>
-                        <div className="col-2">
-                            <button className="download-geojson button-color-blue" onClick={this.downloadTopoJSON}> <i className="fa fa-download" aria-hidden="true"></i> TopoJSON </button>
-                        </div>
-                        <div className="col-2">
-                            <button className="download-geojson button-color-blue" onClick={this.downloadPoly}> <i className="fa fa-download" aria-hidden="true"></i> Poly file </button>
-                        </div>
-                    </div>
-                </div>
+                </Draggable>
                 <div ref={'map'} className="map"/>
             </div>
         );
