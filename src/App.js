@@ -13,6 +13,7 @@ const bckFeatures = NepalAdmin.features;
 
 let provinces = _.uniq(features.map(feature => feature.properties.provinceId)).filter(Boolean).sort();
 let districts = _.uniq(features.map(feature => feature.properties.districtId)).filter(Boolean).sort();
+let municipalities = _.uniq(features.map(feature => feature.properties.NAME)).filter(Boolean).sort();
 
 let geoJSONLayer = undefined;
 
@@ -42,26 +43,59 @@ class App extends Component {
     }
 
     handleProvinceChange = (selected) => {
-        districts = _.uniq(features.filter(feature => feature.properties.provinceId === selected.value).map(feature => feature.properties.districtId)).filter(Boolean).sort();
-        this.addGeojson(bckFeatures.filter((feature) => {
-            return feature.properties.provinceId === selected.value;
-        }));
+        this.applyAppropriateGeoJSON(selected,'province');
         this.setState({
             selectedProvince: selected,
         });
+
+    }
+
+    applyAppropriateGeoJSON(selected,type){
+        if(!selected) return;
+        switch(type){
+            case 'province':
+                districts = _.uniq(features.filter(feature => feature.properties.provinceId === selected.value).map(feature => feature.properties.districtId)).filter(Boolean).sort();
+                this.addGeojson(bckFeatures.filter((feature) => {
+                    return feature.properties.provinceId === selected.value;
+                }));
+                break;
+            case 'district':
+                municipalities = _.uniq(features.filter(feature => feature.properties.districtId === selected.value).map(feature => feature.properties.NAME)).filter(Boolean).sort();
+                this.addGeojson(bckFeatures.filter((feature) => {
+                    return feature.properties.districtId === selected.value;
+                }));
+                break;
+            default:
+
+        }
+
     }
 
     handleDistrictChange = (selected) => {
+        this.applyAppropriateGeoJSON(selected,'district');
         this.setState({
             selectedDistrict: selected,
         });
+
+    }
+
+    handleMunicipalityChange = (selected) => {
+        if(selected){
+            this.addGeojson(bckFeatures.filter((feature) => {
+                return feature.properties.NAME === selected.value;
+            }));
+        }
+        this.setState({
+            selectedMunicipality: selected,
+        });
+
     }
 
     render() {
         const { selectedProvince,selectedDistrict,selectedMunicipality } = this.state;
         const valueProvince = selectedProvince && selectedProvince.value;
         const valueDistrict = selectedDistrict && selectedDistrict.value;
-        const valueMunicipality = selectedProvince && selectedProvince.value;
+        const valueMunicipality = selectedMunicipality && selectedMunicipality.value;
         return (
             <div>
                 <div className="select-file">
@@ -69,7 +103,7 @@ class App extends Component {
                         <h4>Admin boundaries - Nepal</h4>
                     </div>
                     <div className="row">
-                        <div className="col-6">
+                        <div className="col-4">
                             <Select
                                 placeholder = 'Select Province'
                                 value={valueProvince}
@@ -82,7 +116,7 @@ class App extends Component {
                                 })}
                             />
                         </div>
-                        <div className="col-6">
+                        <div className="col-4">
                             <Select
                                 placeholder = 'Select District'
                                 value={valueDistrict}
@@ -95,10 +129,20 @@ class App extends Component {
                                 })}
                             />
                         </div>
+                        <div className="col-4">
+                            <Select
+                                placeholder = 'Select Municipality'
+                                value={valueMunicipality}
+                                onChange={this.handleMunicipalityChange}
+                                options={municipalities.map((municipality)=>{
+                                    return {
+                                        value : municipality,
+                                        label : municipality,
+                                    };
+                                })}
+                            />
+                        </div>
                     </div>
-
-
-
                 </div>
                 <div ref={'map'} className="map"/>
             </div>
