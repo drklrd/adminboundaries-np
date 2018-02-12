@@ -1,0 +1,21 @@
+body{
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.map {
+    height: 100vh;
+}
+
+.select-file{
+    position: absolute;
+    top : 50px;
+    width: 400px;
+    left : 60%;
+    z-index : 1000;
+    background: #000000;
+    opacity: 0.7;
+    color: #ffffff;
+    padding : 20px;
+    border-radius: 5px;
+    cursor: move;
+}
