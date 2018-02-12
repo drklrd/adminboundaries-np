@@ -50,3 +50,7 @@ body{
     border-radius: 5px;
     cursor: move;
 }
+
+.select *{
+    color: #2c3e50;
+}

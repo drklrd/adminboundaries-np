@@ -134,11 +134,12 @@ class App extends Component {
             <div>
                 <div className="select-file">
                     <div className="row">
-                        <h4>Admin boundaries - Nepal</h4>
+                        <h4> Download admin boundaries for Nepal</h4>
                     </div>
                     <div className="row">
                         <div className="col-4">
                             <Select
+                                className="select"
                                 placeholder = 'Select Province'
                                 value={valueProvince}
                                 onChange={this.handleProvinceChange}
@@ -152,6 +153,7 @@ class App extends Component {
                         </div>
                         <div className="col-4">
                             <Select
+                                className="select"
                                 placeholder = 'Select District'
                                 value={valueDistrict}
                                 onChange={this.handleDistrictChange}
@@ -165,6 +167,7 @@ class App extends Component {
                         </div>
                         <div className="col-4">
                             <Select
+                                className="select"
                                 placeholder = 'Select Municipality'
                                 value={valueMunicipality}
                                 onChange={this.handleMunicipalityChange}
