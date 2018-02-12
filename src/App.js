@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import _ from 'underscore';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import Extract from 'geojson-extract-geometries';
 
 import NepalAdmin from './data/admin-nepal.json';
 
@@ -92,18 +93,32 @@ class App extends Component {
     }
 
     downloadGeoJSON = () => {
-        this.initiateDownload(geoJSONLayer.toGeoJSON(),'geojson');
+        this.initiateDownload(JSON.stringify(geoJSONLayer.toGeoJSON()),'geojson');
     }
 
     downloadTopoJSON = () => {
         const geoJSON = geoJSONLayer.toGeoJSON();
-        const topojsonvalue = topojson.topology({features:geoJSON});
-        this.initiateDownload(topojsonvalue,'topojson');
+        const topojsonvalue = topojson.topology({ features: geoJSON });
+        this.initiateDownload(JSON.stringify(topojsonvalue),'topojson');
+    }
 
+    downloadPoly = () => {
+        const geoJSON = geoJSONLayer.toGeoJSON();
+        let polies = Extract(geoJSON,'Polygon');
+        let polyStr = '';
+        const name = 'poly';
+        polies.forEach((poly,ind) => {
+            polyStr = polyStr + name + '-' + ind + '\n' + 1 + '\n';
+            poly.coordinates[0].forEach((p) => {
+                polyStr = polyStr + '\t' + p.join('\t') + '\n';
+            });
+            polyStr = polyStr + 'END\nEND\n';
+        });
+        this.initiateDownload(polyStr,'poly');
     }
 
     initiateDownload(obj,format){
-        const dataStr = URL.createObjectURL( new Blob([(JSON.stringify(obj))],{type:'text/plain'}));
+        const dataStr = URL.createObjectURL( new Blob([(obj)],{type:'text/plain'}));
         const dlAnchorElem = document.createElement('a');
         dlAnchorElem.setAttribute("href", dataStr);
         dlAnchorElem.setAttribute("download",`downloadeddata.${format}`);
@@ -164,11 +179,14 @@ class App extends Component {
                     </div>
                     <br/>
                     <div className="row">
-                        <div className="col-3">
-                            <button className="download-geojson button-color-blue" onClick={this.downloadGeoJSON}> Download GeoJSON </button>
+                        <div className="col-2">
+                            <button className="download-geojson button-color-blue" onClick={this.downloadGeoJSON}> <i className="fa fa-download" aria-hidden="true"></i>   GeoJSON </button>
                         </div>
-                        <div className="col-3">
-                            <button className="download-geojson button-color-blue" onClick={this.downloadTopoJSON}> Download TopoJSON </button>
+                        <div className="col-2">
+                            <button className="download-geojson button-color-blue" onClick={this.downloadTopoJSON}> <i className="fa fa-download" aria-hidden="true"></i> TopoJSON </button>
+                        </div>
+                        <div className="col-2">
+                            <button className="download-geojson button-color-blue" onClick={this.downloadPoly}> <i className="fa fa-download" aria-hidden="true"></i> Poly file </button>
                         </div>
                     </div>
                 </div>
