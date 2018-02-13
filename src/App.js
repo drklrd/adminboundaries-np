@@ -1,23 +1,26 @@
-import Draggable from 'react-draggable';
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import _ from 'underscore';
-import Select from 'react-select';
-import 'react-select/dist/react-select.css';
 import Extract from 'geojson-extract-geometries';
 import Intersect from '@turf/intersect';
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import Select from 'react-select';
+import _ from 'underscore';
+
+import 'react-select/dist/react-select.css';
+import './App.css';
 
 import NepalAdmin from './data/admin-nepal.json';
-
-import './App.css';
 
 const topojson = require('topojson-server');
 const { features } = NepalAdmin;
 const bckFeatures = NepalAdmin.features;
 
-let provinces = _.uniq(features.map(feature => feature.properties.provinceId)).filter(Boolean).sort();
-let districts = _.uniq(features.map(feature => feature.properties.districtId)).filter(Boolean).sort();
-let municipalities = _.uniq(features.map(feature => feature.properties.NAME)).filter(Boolean).sort();
+const getProvinceDistrictsMunicipalites = (key) =>{
+  return _.uniq(features.map(feature => feature.properties[key])).filter(Boolean).sort();
+};
+
+let provinces = getProvinceDistrictsMunicipalites('provinceId');
+let districts = getProvinceDistrictsMunicipalites('districtId');
+let municipalities = getProvinceDistrictsMunicipalites('NAME');
 
 let geoJSONLayer = undefined;
 
@@ -29,14 +32,29 @@ class App extends Component {
         selectedMunicipality: '',
     }
 
+    renderPopup(properties){
+        let template = '';
+        function getTagValues(tags){
+            for(let tag in tags){
+                if(typeof tags[tag] !== 'object'){
+                    template += `<strong> ${tag} </strong> : ${tags[tag]} <br/> `;
+                }
+            }
+        }
+        getTagValues(properties);
+        getTagValues(properties.tags);
+        return template;
+    }
+
     updateGeojson = (geofeatures) =>{
         if(geoJSONLayer) geoJSONLayer.clearLayers();
         geoJSONLayer = window.L.geoJSON(geofeatures,{
             onEachFeature: (feature,layer)=>{
-                layer.bindPopup(feature.properties);
+                layer.bindPopup(this.renderPopup(feature.properties));
             },
             style : {
-                'color': '#9b59b6'
+                'color': '#9b59b6',
+                "opacity": 0.7
             }
         }).addTo(this.map);
         this.map.fitBounds(geoJSONLayer.getBounds());
