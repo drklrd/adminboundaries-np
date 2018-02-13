@@ -8,9 +8,9 @@ body{
 
 .select-file{
     position: absolute;
-    top : 50px;
-    width: 900px;
-    left : 50%;
+    /*top : 50px;*/
+    width: 1000px;
+    left : 47%;
     z-index : 1000;
     background: #000000;
     opacity: 0.7;
@@ -19,6 +19,7 @@ body{
     border-radius: 5px;
     cursor: move;
 }
+
 
 .download-geojson{
     /*position: relative;*/
@@ -31,7 +32,7 @@ body{
 }
 
 .button-color-blue{
-    background: #2B82CB;
+    background: #8e44ad;
 }
 
 .button-color-green{

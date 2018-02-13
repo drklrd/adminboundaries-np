@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@turf/envelope": "^5.1.5",
+    "@turf/intersect": "^5.1.6",
+    "@turf/union": "^5.1.5",
     "geojson-extract-geometries": "0.0.2",
     "leaflet": "^1.2.0",
     "osmtogeojson": "^2.2.12",
