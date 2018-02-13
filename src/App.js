@@ -64,15 +64,13 @@ class App extends Component {
         geoJSONLayer = window.L.geoJSON(geofeatures,{
             onEachFeature: (feature,layer)=>{
                 layer.bindPopup(this.renderPopup(feature.properties));
-                layer.on('mouseover', ()=> { layer.openPopup(); });
-                layer.on('mouseout', ()=> { layer.closePopup(); });
             },
             style : (feature) => {
                 if(!feature.properties.districtId) return;
                 const color = feature.properties.provinceId % 2 === 0 ? '#003893' : '#dc143c';
                 return {
                     color,
-                    weight : 1.2
+                    weight: 1.2,
                 }
             }
         }).addTo(this.map);
@@ -92,6 +90,7 @@ class App extends Component {
                     try {
                         let conflict = Intersect(parcel2, parcel1);
                         if (conflict != null) {
+                            conflict.properties = parcel1.properties;
                             intersections.push(conflict);
                         }
                     }
