@@ -59,7 +59,8 @@ class App extends Component {
                 if(!feature.properties.districtId) return;
                 const color = feature.properties.provinceId % 2 === 0 ? '#003893' : '#dc143c';
                 return {
-                    color
+                    color,
+                    weight : 1.2
                 }
             }
         }).addTo(this.map);
