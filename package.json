@@ -22,15 +22,18 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
+    "babel-eslint": "^8.0.2",
     "eslint": "^4.9.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
-    "babel-eslint": "^8.0.2"
+    "gh-pages": "^1.1.0"
   },
-  "homepage" : "https://drklrd.github.io/adminboundaries-np"
+  "homepage": "https://drklrd.github.io/adminboundaries-np"
 }
