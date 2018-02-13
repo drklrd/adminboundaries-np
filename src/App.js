@@ -15,7 +15,7 @@ const { features } = NepalAdmin;
 const bckFeatures = NepalAdmin.features;
 
 const getProvinceDistrictsMunicipalites = (key) =>{
-  return _.uniq(features.map(feature => feature.properties[key])).filter(Boolean).sort();
+    return _.uniq(features.map(feature => feature.properties[key])).filter(Boolean).sort();
 };
 
 let provinces = getProvinceDistrictsMunicipalites('provinceId');
@@ -26,24 +26,27 @@ let geoJSONLayer = undefined;
 
 class App extends Component {
 
-    state = {
-      selectedProvince: '',
-      selectedDistrict: '',
-      selectedMunicipality: '',
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedProvince: '',
+            selectedDistrict: '',
+            selectedMunicipality: '',
+        };
     }
 
     renderPopup(properties){
-      let template = '';
-      function getTagValues(tags){
-        for (let tag in tags){
-          if(typeof tags[tag] !== 'object'){
-            template += `<strong> ${tag} </strong> : ${tags[tag]} <br/> `;
-          }
+        let template = '';
+        function getTagValues(tags){
+            for (let tag in tags){
+                if(typeof tags[tag] !== 'object'){
+                    template += `<strong> ${tag} </strong> : ${tags[tag]} <br/> `;
+                }
+            }
         }
-      }
-      getTagValues(properties);
-      getTagValues(properties.tags);
-      return template;
+        getTagValues(properties);
+        getTagValues(properties.tags);
+        return template;
     }
 
     updateGeojson = (geofeatures) =>{
@@ -90,10 +93,10 @@ class App extends Component {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
         this.addGeojson(features);
-        // FeatureGroup is to store editable layers
-        var drawnItems = new window.L.FeatureGroup();
+
+        const drawnItems = new window.L.FeatureGroup();
         map.addLayer(drawnItems);
-        var drawControl = new window.L.Control.Draw({
+        let drawControl = new window.L.Control.Draw({
             draw: {
                 polygon: false,
                 marker: false,
