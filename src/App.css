@@ -8,14 +8,14 @@ body{
 
 .select-file{
     position: absolute;
-    /*top : 50px;*/
-    width: 1000px;
+    top : 15px;
+    width: 850px;
     left : 47%;
     z-index : 1000;
     background: #000000;
     opacity: 0.7;
     color: #ffffff;
-    padding : 20px;
+    padding : 30px;
     border-radius: 5px;
     cursor: move;
 }
@@ -36,7 +36,7 @@ body{
 }
 
 .button-color-green{
-    background: #c0392b;
+    background: #8e44ad;
 }
 
 .edit-mode{

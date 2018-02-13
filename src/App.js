@@ -27,23 +27,23 @@ let geoJSONLayer = undefined;
 class App extends Component {
 
     state = {
-        selectedProvince: '',
-        selectedDistrict: '',
-        selectedMunicipality: '',
+      selectedProvince: '',
+      selectedDistrict: '',
+      selectedMunicipality: '',
     }
 
     renderPopup(properties){
-        let template = '';
-        function getTagValues(tags){
-            for(let tag in tags){
-                if(typeof tags[tag] !== 'object'){
-                    template += `<strong> ${tag} </strong> : ${tags[tag]} <br/> `;
-                }
-            }
+      let template = '';
+      function getTagValues(tags){
+        for (let tag in tags){
+          if(typeof tags[tag] !== 'object'){
+            template += `<strong> ${tag} </strong> : ${tags[tag]} <br/> `;
+          }
         }
-        getTagValues(properties);
-        getTagValues(properties.tags);
-        return template;
+      }
+      getTagValues(properties);
+      getTagValues(properties.tags);
+      return template;
     }
 
     updateGeojson = (geofeatures) =>{
@@ -85,7 +85,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        const map = this.map = window.L.map(ReactDOM.findDOMNode(this.refs['map']),{}).setView([28.2380, 83.9956], 3);
+        const map = this.map = window.L.map(ReactDOM.findDOMNode(this.refs['map']),{ minZoom: 8}).setView([28.2380, 83.9956], 3);
         window.L.tileLayer.grayscale('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
@@ -102,14 +102,6 @@ class App extends Component {
             }
         });
         map.addControl(drawControl);
-
-    }
-
-    handleProvinceChange = (selected) => {
-        this.applyAppropriateGeoJSON(selected,'province');
-        this.setState({
-            selectedProvince: selected,
-        });
 
     }
 
@@ -132,9 +124,14 @@ class App extends Component {
                 this.addGeojson(bckFeatures.filter((feature) => {
                     return feature.properties.NAME === selected.value;
                 }));
-
         }
+    }
 
+    handleProvinceChange = (selected) => {
+        this.applyAppropriateGeoJSON(selected,'province');
+        this.setState({
+            selectedProvince: selected,
+        });
     }
 
     handleDistrictChange = (selected) => {
@@ -185,6 +182,15 @@ class App extends Component {
         dlAnchorElem.click();
     }
 
+    clearSelections = () => {
+        this.setState({
+            selectedProvince: '',
+            selectedDistrict: '',
+            selectedMunicipality: '',
+        });
+        this.updateGeojson(bckFeatures);
+    }
+
     render() {
         const { selectedProvince,selectedDistrict,selectedMunicipality } = this.state;
         const valueProvince = selectedProvince && selectedProvince.value;
@@ -197,12 +203,13 @@ class App extends Component {
                         <h5> Download admin boundaries for Nepal</h5>
                     </div>
                     <div className="row">
-                        <div className="col-4">
+                        <div className="col-3">
                             <Select
                                 className="select"
-                                placeholder = 'Select Province'
+                                placeholder = 'By Province'
                                 value={valueProvince}
                                 onChange={this.handleProvinceChange}
+                                clearable = {false}
                                 options={provinces.map((province)=>{
                                     return {
                                         value : province,
@@ -211,13 +218,13 @@ class App extends Component {
                                 })}
                             />
                         </div>
-                        <div className="col-4">
+                        <div className="col-3">
                             <Select
-                                name="form-field-name"
                                 className="select"
-                                placeholder = 'Select District'
+                                placeholder = 'By District'
                                 value={valueDistrict}
                                 onChange={this.handleDistrictChange}
+                                clearable = {false}
                                 options={districts.map((district)=>{
                                     return {
                                         value : district,
@@ -226,12 +233,13 @@ class App extends Component {
                                 })}
                             />
                         </div>
-                        <div className="col-4">
+                        <div className="col-3">
                             <Select
                                 className="select"
-                                placeholder = 'Select Municipality'
+                                placeholder = 'By Municipality'
                                 value={valueMunicipality}
                                 onChange={this.handleMunicipalityChange}
+                                clearable = {false}
                                 options={municipalities.map((municipality)=>{
                                     return {
                                         value : municipality,
@@ -240,17 +248,19 @@ class App extends Component {
                                 })}
                             />
                         </div>
+                        <div className="col-3">
+                            <button className="download-geojson button-color-blue" onClick={this.clearSelections}> <i className="fa fa-repeat" aria-hidden="true"></i> </button>
+                        </div>
                     </div>
                     <br/>
                     <div className="row">
-                        <div className="col-3"></div>
-                        <div className="col-2">
+                        <div className="col-3">
                             <button className="download-geojson button-color-blue" onClick={this.downloadGeoJSON}> <i className="fa fa-download" aria-hidden="true"></i>   GeoJSON </button>
                         </div>
-                        <div className="col-2">
+                        <div className="col-3">
                             <button className="download-geojson button-color-blue" onClick={this.downloadTopoJSON}> <i className="fa fa-download" aria-hidden="true"></i> TopoJSON </button>
                         </div>
-                        <div className="col-2">
+                        <div className="col-3">
                             <button className="download-geojson button-color-blue" onClick={this.downloadPoly}> <i className="fa fa-download" aria-hidden="true"></i> Poly file </button>
                         </div>
                     </div>
