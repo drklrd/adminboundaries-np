@@ -10,7 +10,7 @@ body{
     position: absolute;
     top : 15px;
     width: 850px;
-    left : 47%;
+    left : 55vw;
     z-index : 1000;
     background: #000000;
     opacity: 0.7;
@@ -31,8 +31,13 @@ body{
     cursor: pointer !important;
 }
 
+
 .button-color-blue{
-    background: #8e44ad;
+    background: #003893;
+}
+
+.crimson{
+    background: #dc143c;
 }
 
 .button-color-green{

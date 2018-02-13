@@ -55,9 +55,12 @@ class App extends Component {
             onEachFeature: (feature,layer)=>{
                 layer.bindPopup(this.renderPopup(feature.properties));
             },
-            style : {
-                'color': '#9b59b6',
-                "opacity": 0.7
+            style : (feature) => {
+                if(!feature.properties.districtId) return;
+                const color = feature.properties.provinceId % 2 === 0 ? '#003893' : '#dc143c';
+                return {
+                    color
+                }
             }
         }).addTo(this.map);
         this.map.fitBounds(geoJSONLayer.getBounds());
@@ -206,7 +209,7 @@ class App extends Component {
                         <h5> Download admin boundaries for Nepal</h5>
                     </div>
                     <div className="row">
-                        <div className="col-3">
+                        <div className="offset-1 col-3">
                             <Select
                                 className="select"
                                 placeholder = 'By Province'
@@ -251,13 +254,13 @@ class App extends Component {
                                 })}
                             />
                         </div>
-                        <div className="col-3">
-                            <button className="download-geojson button-color-blue" onClick={this.clearSelections}> <i className="fa fa-repeat" aria-hidden="true"></i> </button>
+                        <div className="col-2">
+                            <button className="download-geojson crimson" onClick={this.clearSelections}> <i className="fa fa-repeat" aria-hidden="true"></i> </button>
                         </div>
                     </div>
                     <br/>
                     <div className="row">
-                        <div className="col-3">
+                        <div className="offset-1 col-3">
                             <button className="download-geojson button-color-blue" onClick={this.downloadGeoJSON}> <i className="fa fa-download" aria-hidden="true"></i>   GeoJSON </button>
                         </div>
                         <div className="col-3">
