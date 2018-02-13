@@ -18,9 +18,15 @@ const getProvinceDistrictsMunicipalites = (key) =>{
     return _.uniq(features.map(feature => feature.properties[key])).filter(Boolean).sort();
 };
 
-let provinces = getProvinceDistrictsMunicipalites('provinceId');
-let districts = getProvinceDistrictsMunicipalites('districtId');
-let municipalities = getProvinceDistrictsMunicipalites('NAME');
+let provinces,
+    districts,
+    municipalities;
+
+const initializeDropdowns = () => {
+    provinces = getProvinceDistrictsMunicipalites('provinceId');
+    districts = getProvinceDistrictsMunicipalites('districtId');
+    municipalities = getProvinceDistrictsMunicipalites('NAME');
+};
 
 let geoJSONLayer = undefined;
 
@@ -33,6 +39,10 @@ class App extends Component {
             selectedDistrict: '',
             selectedMunicipality: '',
         };
+    }
+
+    componentWillMount(){
+        initializeDropdowns();
     }
 
     renderPopup(properties){
@@ -54,6 +64,8 @@ class App extends Component {
         geoJSONLayer = window.L.geoJSON(geofeatures,{
             onEachFeature: (feature,layer)=>{
                 layer.bindPopup(this.renderPopup(feature.properties));
+                layer.on('mouseover', ()=> { layer.openPopup(); });
+                layer.on('mouseout', ()=> { layer.closePopup(); });
             },
             style : (feature) => {
                 if(!feature.properties.districtId) return;
@@ -196,6 +208,7 @@ class App extends Component {
             selectedMunicipality: '',
         });
         this.updateGeojson(bckFeatures);
+        initializeDropdowns();
     }
 
     render() {
