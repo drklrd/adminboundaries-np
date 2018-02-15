@@ -207,7 +207,9 @@ class App extends Component {
         const dlAnchorElem = document.createElement('a');
         dlAnchorElem.setAttribute("href", dataStr);
         dlAnchorElem.setAttribute("download",`downloadeddata.${format}`);
+        document.body.appendChild(dlAnchorElem);
         dlAnchorElem.click();
+        document.body.removeChild(dlAnchorElem);
     }
 
     clearSelections = () => {
