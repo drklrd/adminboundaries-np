@@ -1,3 +1,4 @@
+import TurfBuffer from '@turf/buffer';
 import Extract from 'geojson-extract-geometries';
 import Intersect from '@turf/intersect';
 import React, { Component } from 'react';
@@ -38,6 +39,7 @@ class App extends Component {
             selectedProvince: '',
             selectedDistrict: '',
             selectedMunicipality: '',
+            bufferValue : 0
         };
     }
 
@@ -177,8 +179,16 @@ class App extends Component {
         this.initiateDownload(JSON.stringify(topojsonvalue),'topojson');
     }
 
+    downloadOptions = () => {
+        this.setState({
+            downloadOptions : true
+        });
+
+    }
+
     downloadPoly = () => {
-        const geoJSON = geoJSONLayer.toGeoJSON();
+        let geoJSON = geoJSONLayer.toGeoJSON();
+        if(this.state.bufferValue > 0) geoJSON = TurfBuffer(geoJSON, this.state.bufferValue, {units: 'kilometers'});
         let polies = Extract(geoJSON,'Polygon');
         let polyStr = '';
         const name = 'poly';
@@ -208,6 +218,12 @@ class App extends Component {
         });
         this.updateGeojson(bckFeatures);
         initializeDropdowns();
+    }
+
+    bufferChange = (e) => {
+        this.setState({
+            bufferValue:  e.target.value,
+        });
     }
 
     render() {
@@ -280,9 +296,24 @@ class App extends Component {
                             <button className="download-geojson button-color-blue" onClick={this.downloadTopoJSON}> <i className="fa fa-download" aria-hidden="true"></i> TopoJSON </button>
                         </div>
                         <div className="col-3">
-                            <button className="download-geojson button-color-blue" onClick={this.downloadPoly}> <i className="fa fa-download" aria-hidden="true"></i> Poly file </button>
+                            <button className="download-geojson button-color-blue" onClick={this.downloadOptions}> <i className="fa fa-download" aria-hidden="true"></i> Poly file </button>
                         </div>
                     </div>
+                    <br/>
+                    {
+                        this.state.downloadOptions &&
+                        <div className="row">
+                            <div className="offset-1 col-5">
+                                Enter Buffer in Kilometers if needed (default 0)
+                            </div>
+                            <div className="col-2">
+                                <input type="text" className="form-control" id="buffer" onChange={this.bufferChange} value={this.state.bufferValue} />
+                            </div>
+                            <div className="col-2">
+                                <button className="download-geojson button-color-blue" onClick={this.downloadPoly}> <i className="fa fa-download" aria-hidden="true"></i>  </button>
+                            </div>
+                        </div>
+                    }
                 </div>
                 <div ref={'map'} className="map"/>
             </div>

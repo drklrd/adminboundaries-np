@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@turf/buffer": "^5.1.5",
     "@turf/envelope": "^5.1.5",
     "@turf/intersect": "^5.1.6",
     "@turf/union": "^5.1.5",
