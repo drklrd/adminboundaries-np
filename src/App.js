@@ -106,7 +106,7 @@ class App extends Component {
 
     componentDidMount() {
         const map = this.map = window.L.map(ReactDOM.findDOMNode(this.refs['map']),{ minZoom: 8}).setView([28.2380, 83.9956], 3);
-        window.L.tileLayer.grayscale('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        window.L.tileLayer.grayscale('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
         this.addGeojson(features);
