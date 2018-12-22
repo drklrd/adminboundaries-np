@@ -125,7 +125,15 @@ class App extends Component {
             }
         });
         map.addControl(drawControl);
+        this.showSelectionInformation();
 
+    }
+
+    showSelectionInformation(){
+        this.setState({
+            showSelectionInfo : true,
+            currentGeoJSON : geoJSONLayer.toGeoJSON()
+        });
     }
 
     applyAppropriateGeoJSON(selected,type){
@@ -149,10 +157,7 @@ class App extends Component {
                 }));
         }
 
-        this.setState({
-            showSelectionInfo : true,
-            currentGeoJSON : geoJSONLayer.toGeoJSON()
-        });
+        this.showSelectionInformation();
     }
 
     handleProvinceChange = (selected) => {
