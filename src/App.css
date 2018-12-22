@@ -2,6 +2,13 @@ body{
     font-family: 'Ubuntu', sans-serif;
 }
 
+ul{
+        font-size: 14px;
+        margin-left: 80px;
+        padding:  0px;
+        display: list-item;
+}
+
 .map {
     height: 100vh;
 }
@@ -17,7 +24,7 @@ body{
     color: #ffffff;
     padding : 30px;
     border-radius: 5px;
-    cursor: move;
+    /*cursor: move;*/
 }
 
 

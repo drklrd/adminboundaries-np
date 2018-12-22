@@ -1,4 +1,7 @@
+import TurfArea from '@turf/area';
 import TurfBuffer from '@turf/buffer';
+import TurfBBox from '@turf/bbox';
+import TurfCentroid from '@turf/centroid';
 import Extract from 'geojson-extract-geometries';
 import Intersect from '@turf/intersect';
 import React, { Component } from 'react';
@@ -145,6 +148,11 @@ class App extends Component {
                     return feature.properties.NAME === selected.value;
                 }));
         }
+
+        this.setState({
+            showSelectionInfo : true,
+            currentGeoJSON : geoJSONLayer.toGeoJSON()
+        });
     }
 
     handleProvinceChange = (selected) => {
@@ -157,7 +165,7 @@ class App extends Component {
     handleDistrictChange = (selected) => {
         this.applyAppropriateGeoJSON(selected,'district');
         this.setState({
-            selectedDistrict: selected,
+            selectedDistrict: selected
         });
 
     }
@@ -290,6 +298,26 @@ class App extends Component {
                         </div>
                     </div>
                     <br/>
+                    {
+                        this.state.showSelectionInfo &&
+                        <div className="information">
+                            <div className="row">
+                                <div className="col-12">
+                                    <ul> Bounding Box: {JSON.stringify(TurfBBox(this.state.currentGeoJSON).map((e)=>Number(e.toFixed(4))))} </ul>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-12">
+                                    <ul> Area: {(TurfArea(this.state.currentGeoJSON)/(1000*1000)).toFixed(2)} sq.km  </ul>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-12">
+                                    <ul> Centroid: {JSON.stringify(TurfCentroid(this.state.currentGeoJSON).geometry.coordinates.map((e)=>Number(e.toFixed(3))))} </ul>
+                                </div>
+                            </div>
+                        </div>
+                    }
                     <div className="row">
                         <div className="offset-1 col-3">
                             <button className="download-geojson button-color-blue" onClick={this.downloadGeoJSON}> <i className="fa fa-download" aria-hidden="true"></i>   GeoJSON </button>
