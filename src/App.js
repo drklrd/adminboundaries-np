@@ -233,6 +233,7 @@ class App extends Component {
         });
         this.updateGeojson(bckFeatures);
         initializeDropdowns();
+        this.showSelectionInformation();
     }
 
     bufferChange = (e) => {
