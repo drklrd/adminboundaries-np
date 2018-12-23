@@ -10,3 +10,9 @@ Pull requests and contributions are highly welcome !!!!!
 
 
 
+# Development
+
+- Clone this repository
+- ``` cd adminboundaries-np ```
+- ``` npm install ```
+- ``` npm start ```
