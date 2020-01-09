@@ -18,6 +18,8 @@ const topojson = require('topojson-server');
 const { features } = NepalAdmin;
 const bckFeatures = NepalAdmin.features;
 
+let collection = [];
+
 const getProvinceDistrictsMunicipalites = (key) =>{
     return _.uniq(features.map(feature => feature.properties[key])).filter(Boolean).sort();
 };
@@ -154,7 +156,7 @@ class App extends Component {
             default:
                 this.addGeojson(bckFeatures.filter((feature) => {
                     return feature.properties.NAME === selected.value;
-                }));
+                }).concat(collection));
         }
 
         this.showSelectionInformation();
@@ -180,6 +182,10 @@ class App extends Component {
         this.setState({
             selectedMunicipality: selected,
         });
+    }
+
+    handleAddToCollection = () => {
+      collection = collection.concat(geoJSONLayer.toGeoJSON());
     }
 
     downloadGeoJSON = () => {
@@ -231,6 +237,7 @@ class App extends Component {
             selectedDistrict: '',
             selectedMunicipality: '',
         });
+        collection = [];
         this.updateGeojson(bckFeatures);
         initializeDropdowns();
         this.showSelectionInformation();
@@ -299,8 +306,11 @@ class App extends Component {
                                 })}
                             />
                         </div>
-                        <div className="col-2">
+                        <div className="col-1">
                             <button className="download-geojson crimson" onClick={this.clearSelections}> <i className="fa fa-repeat" aria-hidden="true"></i> </button>
+                        </div>
+                        <div className="col-1">
+                            <button className="download-geojson button-color-blue" onClick={this.handleAddToCollection}> <i className="fa fa-plus-circle" aria-hidden="true"></i>  </button>
                         </div>
                     </div>
                     <br/>
@@ -308,7 +318,7 @@ class App extends Component {
                         this.state.showSelectionInfo &&
                         <div className="information">
                             <div className="row">
-                                <div className="col-12">
+                                <div className="col-8">
                                     <ul> Bounding Box: {JSON.stringify(TurfBBox(this.state.currentGeoJSON).map((e)=>Number(e.toFixed(4))))} </ul>
                                 </div>
                             </div>
