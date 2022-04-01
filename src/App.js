@@ -12,7 +12,7 @@ import _ from 'underscore';
 import 'react-select/dist/react-select.css';
 import './App.css';
 
-import NepalAdmin from './data/admin-nepal.json';
+import NepalAdmin from './data/adminNepalSimplified.json';
 
 const topojson = require('topojson-server');
 
@@ -171,14 +171,40 @@ class App extends Component {
         });
     }
 
+    getActualAdminDataFromTemplate = (data) => {
+        const adminData = {
+            type: 'FeatureCollection',
+            features: [],
+        };
+        const templateGeojson = geoJSONLayer.toGeoJSON();
+        templateGeojson.features.forEach((tf) => {
+            data.features.forEach((df) => {
+                if (df.properties.uuid == tf.properties.uuid) {
+                    adminData.features.push(df);
+                }
+            });
+        });
+        return adminData;
+    }
+
+    prepareDownload = () => fetch('/js/data/adminNepal.json')
+        .then(res => res.json())
+
     downloadGeoJSON = () => {
-        this.initiateDownload(JSON.stringify(geoJSONLayer.toGeoJSON()), 'geojson');
+        this.prepareDownload()
+            .then((data) => {
+                const geoJSON = this.getActualAdminDataFromTemplate(data);
+                this.initiateDownload(JSON.stringify(geoJSON), 'geojson');
+            });
     }
 
     downloadTopoJSON = () => {
-        const geoJSON = geoJSONLayer.toGeoJSON();
-        const topojsonvalue = topojson.topology({ features: geoJSON });
-        this.initiateDownload(JSON.stringify(topojsonvalue), 'topojson');
+        this.prepareDownload()
+            .then((data) => {
+                const geoJSON = this.getActualAdminDataFromTemplate(data);
+                const topojsonvalue = topojson.topology({ features: geoJSON });
+                this.initiateDownload(JSON.stringify(topojsonvalue), 'topojson');
+            });
     }
 
     downloadOptions = () => {
@@ -188,19 +214,22 @@ class App extends Component {
     }
 
     downloadPoly = () => {
-        let geoJSON = geoJSONLayer.toGeoJSON();
-        if (this.state.bufferValue > 0) geoJSON = TurfBuffer(geoJSON, this.state.bufferValue, { units: 'kilometers' });
-        const polies = Extract(geoJSON, 'Polygon');
-        let polyStr = '';
-        const name = 'poly';
-        polies.forEach((poly, ind) => {
-            polyStr = `${polyStr + name}-${ind}\n${1}\n`;
-            poly.coordinates[0].forEach((p) => {
-                polyStr = `${polyStr}\t${p.join('\t')}\n`;
+        this.prepareDownload()
+            .then((data) => {
+                let geoJSON = this.getActualAdminDataFromTemplate(data);
+                if (this.state.bufferValue > 0) geoJSON = TurfBuffer(geoJSON, this.state.bufferValue, { units: 'kilometers' });
+                const polies = Extract(geoJSON, 'Polygon');
+                let polyStr = '';
+                const name = 'poly';
+                polies.forEach((poly, ind) => {
+                    polyStr = `${polyStr + name}-${ind}\n${1}\n`;
+                    poly.coordinates[0].forEach((p) => {
+                        polyStr = `${polyStr}\t${p.join('\t')}\n`;
+                    });
+                    polyStr += 'END\nEND\n';
+                });
+                this.initiateDownload(polyStr, 'poly');
             });
-            polyStr += 'END\nEND\n';
-        });
-        this.initiateDownload(polyStr, 'poly');
     }
 
     initiateDownload(obj, format) {
