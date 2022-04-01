@@ -19,6 +19,8 @@ const topojson = require('topojson-server');
 const { features } = NepalAdmin;
 const bckFeatures = NepalAdmin.features;
 
+let collection = [];
+
 const getProvinceDistrictsMunicipalites = key => _.uniq(features.map(feature => feature.properties[key])).filter(Boolean).sort();
 
 let provinces,
