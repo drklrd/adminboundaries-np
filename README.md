@@ -2,7 +2,7 @@
 
 Download admin-level boundaries for Nepal in GeoJSON, TopoJSON, Poly file. The app also provides some select options to download the boundary at lower levels (up to municipality)
 
-**Boundaries file courtesy of http://localboundries.oknp.org/**
+**Boundaries file courtesy of [Local Boundaries](https://localboundries.oknp.org/) from OpenKnowledge Nepal**
 
 Find the app running LIVE at https://drklrd.github.io/adminboundaries-np
 
