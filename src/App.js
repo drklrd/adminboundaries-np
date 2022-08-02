@@ -30,8 +30,9 @@ let provinces,
 const initializeDropdowns = () => {
     provinces = getProvinceDistrictsMunicipalites('Province');
     districts = getProvinceDistrictsMunicipalites('DISTRICT');
-    municipalities = getProvinceDistrictsMunicipalites('Gauradhaha');
+    municipalities = getProvinceDistrictsMunicipalites('GaPa_NaPa');
 };
+
 
 let geoJSONLayer;
 
@@ -48,6 +49,7 @@ class App extends Component {
 
     componentWillMount() {
         initializeDropdowns();
+        console.log('municipalities', municipalities);
     }
 
     renderPopup(properties) {
@@ -146,6 +148,7 @@ class App extends Component {
                 this.addGeojson(bckFeatures.filter(feature => feature.properties.DISTRICT === selected.value));
                 break;
             default:
+                console.log('selected', selected);
                 this.addGeojson(bckFeatures.filter(feature => feature.properties.GaPa_NaPa === selected.value));
         }
 
@@ -193,7 +196,7 @@ class App extends Component {
         return adminData;
     }
 
-    prepareDownload = () => fetch('/js/data/adminNepal.json')
+    prepareDownload = () => fetch('js/data/adminNepal.json')
         .then(res => res.json())
 
     downloadGeoJSON = () => {
